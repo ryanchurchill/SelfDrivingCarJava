@@ -15,4 +15,4 @@ javafx {
     modules = [ 'javafx.controls', 'javafx.fxml' ]
 }
 
-mainClassName = 'org.openjfx.gamedevtut.MoneyGame'
+mainClassName = 'org.ryan.selfdrivingcar.App'
