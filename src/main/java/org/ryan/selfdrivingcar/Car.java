@@ -16,19 +16,21 @@ public class Car {
 
     private Rectangle rectCar;
 
-    private final double length = 50;
-    private final double width = 20;
+    private final double width = 50;
+    private final double height = 20;
     private double rotationIncrement = 20;
     private double movementIncrement = 20;
 
-    public Car()
+    public Car(double positionX, double positionY)
     {
+        this.positionX = positionX;
+        this.positionY = positionY;
         initializeRectangle();
     }
 
     private void initializeRectangle()
     {
-        rectCar = new Rectangle(width, length);
+        rectCar = new Rectangle(width, height);
         rectCar.setFill(Color.WHITE);
         updateRectangleBasedOnAngle();
     }
@@ -49,19 +51,21 @@ public class Car {
         if (this.angle > 360) {
             this.angle -= 360;
         }
+
+        rectCar.setRotate(angle);
     }
 
-    private void rotateLeft()
+    public void rotateLeft()
     {
         this.setAngle(this.angle - this.rotationIncrement);
     }
 
-    private void rotateRight()
+    public void rotateRight()
     {
         this.setAngle(this.angle + this.rotationIncrement);
     }
 
-    private void moveForward()
+    public void moveForward()
     {
         double newX = positionX - movementIncrement * Math.sin(angle);
         double newY = positionY - movementIncrement * Math.cos(angle);
