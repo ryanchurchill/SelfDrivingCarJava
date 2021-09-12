@@ -11,6 +11,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.effect.BoxBlur;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
@@ -22,26 +23,34 @@ import javafx.stage.Stage;
 import java.util.ArrayList;
 
 public class App extends Application {
+    private final int width = 800;
+    private final int height = 600;
+
     public void start(Stage stage) {
         stage.setTitle("Self driving car");
 
         Group root = new Group();
-        Scene scene = new Scene(root, 800, 600, Color.BLACK);
+        Scene scene = new Scene(root, this.width, this.height, Color.BLACK);
         stage.setScene(scene);
 
+        StackPane stackPane = new StackPane();
+        root.getChildren().add(stackPane);
 
-
-        Canvas canvas = new Canvas(800, 600);
-        root.getChildren().add(canvas);
+        Canvas carCanvas = new Canvas(this.width, this.height);
+        stackPane.getChildren().add(carCanvas);
         Car car = new Car(50, 50);
-//        GraphicsContext graphicsContext2D = canvas.getGraphicsContext2D();
-        car.draw(canvas);
+        car.draw(carCanvas);
+
+        Canvas sandCanvas = new Canvas(800, 600);
+        stackPane.getChildren().add(sandCanvas);
+        Sand sand = new Sand(this.width, this.height);
+        sand.addSandCircle(500, 500, 50, sandCanvas.getGraphicsContext2D());
 
 //        Circle tiny = new Circle(50, 50, 2);
 //        tiny.setFill(Color.RED);
 //        root.getChildren().add(tiny);
 
-        trackInput(scene, car, canvas);
+        trackInput(scene, car, carCanvas);
 
         stage.show();
     }
