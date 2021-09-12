@@ -1,5 +1,6 @@
 package org.ryan.selfdrivingcar;
 
+import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -9,8 +10,8 @@ public class Car {
     // position is the center of the front of the car
     private double positionX;
     private double positionY;
-    // 0-360?
-    private double angle;
+    // angle between y-axis and front of car
+    private double angle = 0;
 
     private final double width = 25;
     private final double height = 10;
@@ -39,6 +40,22 @@ public class Car {
         gc.fillOval(circle.getCenterX() - circle.getRadius(), circle.getCenterY() - circle.getRadius(), circle.getRadius()*2, circle.getRadius()*2);
     }
 
+    private Point2D rotateVectorClockwise(Point2D vector, double angleDeg)
+    {
+        // https://jvm-gaming.org/t/2d-vectors-and-rotation/35003
+        double angleRad = Math.toRadians(angleDeg) * -1;
+        double cosa=Math.cos(angleRad);
+        double sina=Math.sin(angleRad);
+        double x=vector.getX()*cosa + vector.getY()*sina;
+        double y=-vector.getX()*sina + vector.getY()*cosa;
+
+        Point2D ret = new Point2D(x, y);
+
+        System.out.println(vector.angle(ret));
+
+        return ret;
+    }
+
     public void draw(GraphicsContext gc)
     {
         // draw car
@@ -49,10 +66,10 @@ public class Car {
         gc.setFill(Color.RED);
 //        gc.fillOval(sensor2.getCenterX() - sensor2.getRadius(), sensor2.getCenterY() - sensor2.getRadius(), sensor2.getRadius()*2, sensor2.getRadius()*2);
         fillOval(gc, sensorMiddle);
-        gc.setFill(Color.YELLOW);
-        fillOval(gc, sensorRight);
-        gc.setFill(Color.BLUE);
-        fillOval(gc, sensorLeft);
+//        gc.setFill(Color.YELLOW);
+//        fillOval(gc, sensorRight);
+//        gc.setFill(Color.BLUE);
+//        fillOval(gc, sensorLeft);
 //        gc.fillOval()
     }
 
@@ -62,12 +79,22 @@ public class Car {
         double y = positionY - height / 2;
         rectCar = new Rectangle2D(x, y, width, height);
 
-        sensorMiddle = new Circle(this.positionX - sensorDistance, this.positionY, this.sensorRadius);
-        sensorRight = new Circle(this.positionX - (sensorDistance * Math.cos(45)), this.positionY - (sensorDistance * Math.sin(45)), this.sensorRadius);
-        sensorLeft = new Circle(this.positionX - (sensorDistance * Math.cos(45)), this.positionY + (sensorDistance * Math.sin(45)), this.sensorRadius);
+        Point2D sensorMiddleVector = new Point2D(-this.sensorDistance, 0);
+        sensorMiddleVector = rotateVectorClockwise(sensorMiddleVector, 45);
+
+        sensorMiddle = new Circle(this.positionX + sensorMiddleVector.getX(), this.positionY + sensorMiddleVector.getY(), this.sensorRadius);
+//        sensorMiddle = new Circle(this.positionX - sensorDistance, this.positionY, this.sensorRadius);
+//        sensorRight = new Circle(this.positionX - (sensorDistance * Math.cos(45)), this.positionY - (sensorDistance * Math.sin(45)), this.sensorRadius);
+//        sensorLeft = new Circle(this.positionX - (sensorDistance * Math.cos(45)), this.positionY + (sensorDistance * Math.sin(45)), this.sensorRadius);
+
+        double angle = Math.toRadians(45);
+        sensorRight = new Circle(this.positionX - (sensorDistance * Math.cos(angle)), this.positionY - (sensorDistance * Math.sin(angle)), this.sensorRadius);
+        sensorLeft = new Circle(this.positionX - (sensorDistance * Math.cos(angle)), this.positionY + (sensorDistance * Math.sin(angle)), this.sensorRadius);
 
 //        updateRectangleBasedOnAngle();
     }
+
+//    private Circle initializeSensor()
 
 //    private void updateRectangleBasedOnAngle()
 //    {
