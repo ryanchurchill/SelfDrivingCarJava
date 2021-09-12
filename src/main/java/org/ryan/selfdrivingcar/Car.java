@@ -2,13 +2,15 @@ package org.ryan.selfdrivingcar;
 
 import javafx.geometry.Point2D;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
 
 enum SensorType {
     LEFT,
-    CENTER,
+    MIDDLE,
     RIGHT
 }
 
@@ -27,7 +29,9 @@ public class Car {
     private final double sensorRadius = 4;
 
     // not a JavaFX node
-    private Rectangle2D rectCar;
+//    private Rectangle2D rectCar;
+    // is a node but we're not using it like one
+    private Rectangle rectCar;
 
     // note that these circles are JavaFX nodes, but we won't use them as such
     private Circle sensorMiddle;
@@ -62,45 +66,59 @@ public class Car {
         return ret;
     }
 
-    public void draw(GraphicsContext gc)
+    public void draw(Canvas canvas)
     {
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+
+        // clear
+        gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+
         // draw car
         gc.setFill(Color.WHITE);
-        gc.fillRect(rectCar.getMinX(), rectCar.getMinY(), rectCar.getWidth(), rectCar.getHeight());
+        gc.fillRect(rectCar.getX(), rectCar.getY(), rectCar.getWidth(), rectCar.getHeight());
 
         // draw sensor2
         gc.setFill(Color.RED);
-//        gc.fillOval(sensor2.getCenterX() - sensor2.getRadius(), sensor2.getCenterY() - sensor2.getRadius(), sensor2.getRadius()*2, sensor2.getRadius()*2);
         fillOval(gc, sensorMiddle);
         gc.setFill(Color.YELLOW);
         fillOval(gc, sensorRight);
         gc.setFill(Color.BLUE);
         fillOval(gc, sensorLeft);
-//        gc.fillOval()
     }
 
     private void initialize()
     {
         double x = positionX;
         double y = positionY - height / 2;
-        rectCar = new Rectangle2D(x, y, width, height);
+//        rectCar = new Rectangle2D(x, y, width, height);
+        rectCar = new Rectangle(x, y, width, height);
 
-        sensorMiddle = initializeSensor(SensorType.CENTER);
-        sensorLeft = initializeSensor(SensorType.LEFT);
-        sensorRight = initializeSensor(SensorType.RIGHT);
+        Point2D sensorMiddleCoordinates = getSensorCoordinates(SensorType.MIDDLE);
+        sensorMiddle = new Circle(sensorMiddleCoordinates.getX(), sensorMiddleCoordinates.getY(), this.sensorRadius);
 
-//        sensorMiddle = new Circle(this.positionX - sensorDistance, this.positionY, this.sensorRadius);
-//        sensorRight = new Circle(this.positionX - (sensorDistance * Math.cos(45)), this.positionY - (sensorDistance * Math.sin(45)), this.sensorRadius);
-//        sensorLeft = new Circle(this.positionX - (sensorDistance * Math.cos(45)), this.positionY + (sensorDistance * Math.sin(45)), this.sensorRadius);
+        Point2D sensorLeftCoordinates = getSensorCoordinates(SensorType.LEFT);
+        sensorLeft = new Circle(sensorLeftCoordinates.getX(), sensorLeftCoordinates.getY(), this.sensorRadius);
 
-//        double angle = Math.toRadians(45);
-//        sensorRight = new Circle(this.positionX - (sensorDistance * Math.cos(angle)), this.positionY - (sensorDistance * Math.sin(angle)), this.sensorRadius);
-//        sensorLeft = new Circle(this.positionX - (sensorDistance * Math.cos(angle)), this.positionY + (sensorDistance * Math.sin(angle)), this.sensorRadius);
-
-//        updateRectangleBasedOnAngle();
+        Point2D sensorRightCoordinates = getSensorCoordinates(SensorType.RIGHT);
+        sensorRight = new Circle(sensorRightCoordinates.getX(), sensorRightCoordinates.getY(), this.sensorRadius);
     }
 
-    private Circle initializeSensor(SensorType sensorType)
+    private void updateSensorCoordinates()
+    {
+        Point2D sensorMiddleCoordinates = getSensorCoordinates(SensorType.MIDDLE);
+        sensorMiddle.setCenterX(sensorMiddleCoordinates.getX());
+        sensorMiddle.setCenterY(sensorMiddleCoordinates.getY());
+
+        Point2D sensorLeftCoordinates = getSensorCoordinates(SensorType.LEFT);
+        sensorLeft.setCenterX(sensorLeftCoordinates.getX());
+        sensorLeft.setCenterY(sensorLeftCoordinates.getY());
+
+        Point2D sensorRightCoordinates = getSensorCoordinates(SensorType.RIGHT);
+        sensorRight.setCenterX(sensorRightCoordinates.getX());
+        sensorRight.setCenterY(sensorRightCoordinates.getY());
+    }
+
+    private Point2D getSensorCoordinates(SensorType sensorType)
     {
         Point2D sensorVector = new Point2D(-this.sensorDistance, 0);
 
@@ -114,7 +132,7 @@ public class Car {
 
         sensorVector = rotateVectorClockwise(sensorVector, angleDeg + additionalAngleDeg);
 
-        return new Circle(this.positionX + sensorVector.getX(), this.positionY + sensorVector.getY(), this.sensorRadius);
+        return new Point2D(this.positionX + sensorVector.getX(), this.positionY + sensorVector.getY());
     }
 
 //    private void updateRectangleBasedOnAngle()
@@ -133,6 +151,8 @@ public class Car {
         if (this.angleDeg > 360) {
             this.angleDeg -= 360;
         }
+
+        this.updateSensorCoordinates();
 
 //        rectCar.setRotate(angle);
     }

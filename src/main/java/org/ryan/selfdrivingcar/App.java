@@ -30,8 +30,8 @@ public class App extends Application {
         Canvas canvas = new Canvas(800, 600);
         root.getChildren().add(canvas);
         Car car = new Car(50, 50);
-        GraphicsContext graphicsContext2D = canvas.getGraphicsContext2D();
-        car.draw(graphicsContext2D);
+//        GraphicsContext graphicsContext2D = canvas.getGraphicsContext2D();
+        car.draw(canvas);
 
 //        canvas.setRotate(50);
 
@@ -51,6 +51,7 @@ public class App extends Application {
 //        car.setRotate(90);
 
 //        car.rotateRight();
+//        car.draw(canvas);
 //        car.rotateRight();
 //        car.rotateRight();
 //        car.rotateRight();
