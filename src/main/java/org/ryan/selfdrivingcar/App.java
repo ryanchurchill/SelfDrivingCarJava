@@ -27,21 +27,28 @@ public class App extends Application {
         Scene scene = new Scene(root, 800, 600, Color.BLACK);
         stage.setScene(scene);
 
-//        Car car = new Car(50, 50);
+        Canvas canvas = new Canvas(800, 600);
+        root.getChildren().add(canvas);
+        Car car = new Car(50, 50);
+        GraphicsContext graphicsContext2D = canvas.getGraphicsContext2D();
+        car.draw(graphicsContext2D);
+
+//        canvas.setRotate(50);
+
 //        Rectangle carRectangle = car.getRectangle();
 //        root.getChildren().add(carRectangle);
 
-        Rectangle car = new Rectangle(50, 50, 50, 50);
-        car.setFill(Color.WHITE);
-        root.getChildren().add(car);
-
-        Rectangle tiny = new Rectangle(50, 50, 10, 10);
-        tiny.setFill(Color.RED);
-        root.getChildren().add(tiny);
-
-        car.setRotate(20);
-        car.setRotate(40);
-        car.setRotate(90);
+//        Rectangle car = new Rectangle(50, 50, 50, 50);
+//        car.setFill(Color.WHITE);
+//        root.getChildren().add(car);
+//
+//        Rectangle tiny = new Rectangle(50, 50, 10, 10);
+//        tiny.setFill(Color.RED);
+//        root.getChildren().add(tiny);
+//
+//        car.setRotate(20);
+//        car.setRotate(40);
+//        car.setRotate(90);
 
 //        car.rotateRight();
 //        car.rotateRight();
