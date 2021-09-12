@@ -1,7 +1,6 @@
 package org.ryan.selfdrivingcar;
 
 import javafx.geometry.Point2D;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
@@ -14,6 +13,9 @@ enum SensorType {
     RIGHT
 }
 
+/**
+ * Includes Car and sensors - this is both the model, and the draw() method for the view
+ */
 public class Car {
     // position is the center of the front of the car
     private double positionX;
@@ -21,8 +23,8 @@ public class Car {
     // angle between y-axis and front of car
     private double angleDeg = 0;
 
-    private final double width = 25;
-    private final double height = 10;
+    private final double carWidth = 25;
+    private final double carHeight = 10;
     private double rotationIncrementDeg = 45;
     private double movementIncrement = 20;
     private final double sensorDistance = 15;
@@ -31,7 +33,7 @@ public class Car {
     // not a JavaFX node
 //    private Rectangle2D rectCar;
     // is a node but we're not using it like one
-    private Rectangle rectCar;
+//    private Rectangle rectCar;
 
     // note that these circles are JavaFX nodes, but we won't use them as such
     private Circle sensorMiddle;
@@ -61,7 +63,7 @@ public class Car {
 
         Point2D ret = new Point2D(x, y);
 
-        System.out.println(vector.angle(ret));
+//        System.out.println(vector.angle(ret));
 
         return ret;
     }
@@ -74,8 +76,7 @@ public class Car {
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
         // draw car
-        gc.setFill(Color.WHITE);
-        gc.fillRect(rectCar.getX(), rectCar.getY(), rectCar.getWidth(), rectCar.getHeight());
+        drawCar(canvas);
 
         // draw sensor2
         gc.setFill(Color.RED);
@@ -86,12 +87,31 @@ public class Car {
         fillOval(gc, sensorLeft);
     }
 
+    private void drawCar(Canvas canvas)
+    {
+        GraphicsContext gc = canvas.getGraphicsContext2D();
+        gc.setFill(Color.WHITE);
+        // upper left of un-rotated car
+        double x = positionX;
+        double y = positionY - carHeight / 2;
+
+        // rotation + fill https://stackoverflow.com/questions/42582239/javafx-rotate-rectangle-about-center
+        gc.save();
+        gc.translate(positionX, positionY); // rotate around center of front of car
+        gc.rotate(angleDeg);
+        gc.translate(-positionX, -positionY);
+
+        gc.fillRect(x, y, this.carWidth, this.carHeight);
+
+        gc.restore();
+    }
+
     private void initialize()
     {
-        double x = positionX;
-        double y = positionY - height / 2;
+//        double x = positionX;
+//        double y = positionY - carHeight / 2;
 //        rectCar = new Rectangle2D(x, y, width, height);
-        rectCar = new Rectangle(x, y, width, height);
+//        rectCar = new Rectangle(x, y, carWidth, carHeight);
 
         Point2D sensorMiddleCoordinates = getSensorCoordinates(SensorType.MIDDLE);
         sensorMiddle = new Circle(sensorMiddleCoordinates.getX(), sensorMiddleCoordinates.getY(), this.sensorRadius);

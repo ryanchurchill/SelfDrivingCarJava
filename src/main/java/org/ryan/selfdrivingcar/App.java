@@ -50,12 +50,13 @@ public class App extends Application {
 //        car.setRotate(40);
 //        car.setRotate(90);
 
+        car.rotateRight();
+        car.rotateRight();
+        car.rotateRight();
+        car.rotateLeft();
 //        car.rotateRight();
-//        car.draw(canvas);
 //        car.rotateRight();
-//        car.rotateRight();
-//        car.rotateRight();
-//        car.rotateRight();
+        car.draw(canvas);
 
 //        Rectangle rect = new Rectangle(200, 200, 200, 200);
 //        rect.setFill(Color.RED);
