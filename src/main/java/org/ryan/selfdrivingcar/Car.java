@@ -24,8 +24,8 @@ public class Car {
 
     private final double carWidth = 25;
     private final double carHeight = 10;
-    private double rotationIncrementDeg = 45;
-    private double movementIncrement = 20;
+    private double rotationIncrementDeg = 15;
+    private double movementIncrement = 5;
     private final double sensorDistance = 15;
     private final double sensorRadius = 4;
 
@@ -183,7 +183,15 @@ public class Car {
 
     public void moveForward()
     {
-        double newX = positionX - movementIncrement * Math.sin(angleDeg);
-        double newY = positionY - movementIncrement * Math.cos(angleDeg);
+        // straight left movement vector, assuming angle of 0
+        Point2D movementVector = new Point2D(-movementIncrement, 0);
+
+        // rotate
+        movementVector = rotateVectorClockwise(movementVector, angleDeg);
+
+        // update properties
+        positionX += movementVector.getX();
+        positionY += movementVector.getY();
+        updateSensorCoordinates();
     }
 }

@@ -62,6 +62,10 @@ public class App extends Application {
                         car.rotateLeft();
                         car.draw(canvas);
                     }
+                    else if (code == "UP") {
+                        car.moveForward();
+                        car.draw(canvas);
+                    }
                 }
             }
         );
