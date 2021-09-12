@@ -6,19 +6,25 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
+enum SensorType {
+    LEFT,
+    CENTER,
+    RIGHT
+}
+
 public class Car {
     // position is the center of the front of the car
     private double positionX;
     private double positionY;
     // angle between y-axis and front of car
-    private double angle = 0;
+    private double angleDeg = 0;
 
     private final double width = 25;
     private final double height = 10;
-    private double rotationIncrement = 45;
+    private double rotationIncrementDeg = 45;
     private double movementIncrement = 20;
     private final double sensorDistance = 15;
-    private final double sensorRadius = 5;
+    private final double sensorRadius = 4;
 
     // not a JavaFX node
     private Rectangle2D rectCar;
@@ -66,10 +72,10 @@ public class Car {
         gc.setFill(Color.RED);
 //        gc.fillOval(sensor2.getCenterX() - sensor2.getRadius(), sensor2.getCenterY() - sensor2.getRadius(), sensor2.getRadius()*2, sensor2.getRadius()*2);
         fillOval(gc, sensorMiddle);
-//        gc.setFill(Color.YELLOW);
-//        fillOval(gc, sensorRight);
-//        gc.setFill(Color.BLUE);
-//        fillOval(gc, sensorLeft);
+        gc.setFill(Color.YELLOW);
+        fillOval(gc, sensorRight);
+        gc.setFill(Color.BLUE);
+        fillOval(gc, sensorLeft);
 //        gc.fillOval()
     }
 
@@ -79,22 +85,37 @@ public class Car {
         double y = positionY - height / 2;
         rectCar = new Rectangle2D(x, y, width, height);
 
-        Point2D sensorMiddleVector = new Point2D(-this.sensorDistance, 0);
-        sensorMiddleVector = rotateVectorClockwise(sensorMiddleVector, 45);
+        sensorMiddle = initializeSensor(SensorType.CENTER);
+        sensorLeft = initializeSensor(SensorType.LEFT);
+        sensorRight = initializeSensor(SensorType.RIGHT);
 
-        sensorMiddle = new Circle(this.positionX + sensorMiddleVector.getX(), this.positionY + sensorMiddleVector.getY(), this.sensorRadius);
 //        sensorMiddle = new Circle(this.positionX - sensorDistance, this.positionY, this.sensorRadius);
 //        sensorRight = new Circle(this.positionX - (sensorDistance * Math.cos(45)), this.positionY - (sensorDistance * Math.sin(45)), this.sensorRadius);
 //        sensorLeft = new Circle(this.positionX - (sensorDistance * Math.cos(45)), this.positionY + (sensorDistance * Math.sin(45)), this.sensorRadius);
 
-        double angle = Math.toRadians(45);
-        sensorRight = new Circle(this.positionX - (sensorDistance * Math.cos(angle)), this.positionY - (sensorDistance * Math.sin(angle)), this.sensorRadius);
-        sensorLeft = new Circle(this.positionX - (sensorDistance * Math.cos(angle)), this.positionY + (sensorDistance * Math.sin(angle)), this.sensorRadius);
+//        double angle = Math.toRadians(45);
+//        sensorRight = new Circle(this.positionX - (sensorDistance * Math.cos(angle)), this.positionY - (sensorDistance * Math.sin(angle)), this.sensorRadius);
+//        sensorLeft = new Circle(this.positionX - (sensorDistance * Math.cos(angle)), this.positionY + (sensorDistance * Math.sin(angle)), this.sensorRadius);
 
 //        updateRectangleBasedOnAngle();
     }
 
-//    private Circle initializeSensor()
+    private Circle initializeSensor(SensorType sensorType)
+    {
+        Point2D sensorVector = new Point2D(-this.sensorDistance, 0);
+
+        double additionalAngleDeg = 0;
+        if (sensorType == SensorType.LEFT) {
+            additionalAngleDeg -= 45;
+        }
+        else if (sensorType == SensorType.RIGHT) {
+            additionalAngleDeg += 45;
+        }
+
+        sensorVector = rotateVectorClockwise(sensorVector, angleDeg + additionalAngleDeg);
+
+        return new Circle(this.positionX + sensorVector.getX(), this.positionY + sensorVector.getY(), this.sensorRadius);
+    }
 
 //    private void updateRectangleBasedOnAngle()
 //    {
@@ -103,14 +124,14 @@ public class Car {
 //        rectCar.setY(positionY + width / 2);
 //    }
 
-    private void setAngle(double angle)
+    private void setAngleDeg(double angleDeg)
     {
-        this.angle = angle;
-        if (this.angle < 0) {
-            this.angle += 360;
+        this.angleDeg = angleDeg;
+        if (this.angleDeg < 0) {
+            this.angleDeg += 360;
         }
-        if (this.angle > 360) {
-            this.angle -= 360;
+        if (this.angleDeg > 360) {
+            this.angleDeg -= 360;
         }
 
 //        rectCar.setRotate(angle);
@@ -118,17 +139,17 @@ public class Car {
 
     public void rotateLeft()
     {
-        this.setAngle(this.angle - this.rotationIncrement);
+        this.setAngleDeg(this.angleDeg - this.rotationIncrementDeg);
     }
 
     public void rotateRight()
     {
-        this.setAngle(this.angle + this.rotationIncrement);
+        this.setAngleDeg(this.angleDeg + this.rotationIncrementDeg);
     }
 
     public void moveForward()
     {
-        double newX = positionX - movementIncrement * Math.sin(angle);
-        double newY = positionY - movementIncrement * Math.cos(angle);
+        double newX = positionX - movementIncrement * Math.sin(angleDeg);
+        double newY = positionY - movementIncrement * Math.cos(angleDeg);
     }
 }
