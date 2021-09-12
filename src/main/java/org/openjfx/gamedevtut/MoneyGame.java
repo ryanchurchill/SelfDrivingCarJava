@@ -36,17 +36,17 @@ public class MoneyGame extends Application {
         // store keys currently "down" in input
         ArrayList<String> input = new ArrayList<String>();
         theScene.setOnKeyPressed(
-                new EventHandler<KeyEvent>()
+            new EventHandler<KeyEvent>()
+            {
+                public void handle(KeyEvent e)
                 {
-                    public void handle(KeyEvent e)
-                    {
-                        String code = e.getCode().toString();
+                    String code = e.getCode().toString();
 
-                        // only add once... prevent duplicates
-                        if ( !input.contains(code) )
-                            input.add( code );
-                    }
+                    // only add once... prevent duplicates
+                    if ( !input.contains(code) )
+                        input.add( code );
                 }
+            }
         );
         theScene.setOnKeyReleased(
                 new EventHandler<KeyEvent>()

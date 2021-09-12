@@ -5,7 +5,6 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
 
 enum SensorType {
     LEFT,
@@ -30,10 +29,7 @@ public class Car {
     private final double sensorDistance = 15;
     private final double sensorRadius = 4;
 
-    // not a JavaFX node
-//    private Rectangle2D rectCar;
-    // is a node but we're not using it like one
-//    private Rectangle rectCar;
+    // we don't have a rectangle for the car - we rely on position, size, and angle
 
     // note that these circles are JavaFX nodes, but we won't use them as such
     private Circle sensorMiddle;
@@ -62,8 +58,6 @@ public class Car {
         double y=-vector.getX()*sina + vector.getY()*cosa;
 
         Point2D ret = new Point2D(x, y);
-
-//        System.out.println(vector.angle(ret));
 
         return ret;
     }
