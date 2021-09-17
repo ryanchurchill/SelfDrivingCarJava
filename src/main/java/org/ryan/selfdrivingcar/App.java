@@ -11,6 +11,7 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.effect.BoxBlur;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -41,21 +42,21 @@ public class App extends Application {
         Car car = new Car(50, 50);
         car.draw(carCanvas);
 
-        Canvas sandCanvas = new Canvas(800, 600);
+        Canvas sandCanvas = new Canvas(this.width, this.height);
         stackPane.getChildren().add(sandCanvas);
-        Sand sand = new Sand(this.width, this.height);
-        sand.addSandCircle(300, 300, 5, sandCanvas.getGraphicsContext2D());
+        Sand sand = new Sand(sandCanvas);
+//        sand.addSandCircle(300, 300, 5, sandCanvas.getGraphicsContext2D());
 
 //        Circle tiny = new Circle(500, 500, 10);
 //        tiny.setFill(Color.RED);
 //        root.getChildren().add(tiny);
 
-        trackInput(scene, car, carCanvas);
+        trackInput(scene, car, sand, carCanvas);
 
         stage.show();
     }
 
-    private void trackInput(Scene scene, Car car, Canvas canvas)
+    private void trackInput(Scene scene, Car car, Sand sand, Canvas canvas)
     {
         scene.setOnKeyPressed(
             new EventHandler<KeyEvent>()
@@ -78,5 +79,19 @@ public class App extends Application {
                 }
             }
         );
+
+        scene.setOnMouseDragged(
+            new EventHandler<MouseEvent>() {
+                @Override
+                public void handle(MouseEvent event) {
+                    int x = (int) event.getX();
+                    int y = (int) event.getY();
+                    if (x >= 0 && x < width && y >= 0 && y < height) {
+                        sand.addSandCircle(x, y, 10);
+                    }
+                }
+            }
+        );
+
     }
 }
