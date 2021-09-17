@@ -1,8 +1,9 @@
 package org.ryan.selfdrivingcar;
 
+import javafx.animation.AnimationTimer;
 import javafx.application.Application;
+import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
@@ -62,21 +63,59 @@ public class App extends Application {
 //        tiny.setFill(Color.RED);
 //        root.getChildren().add(tiny);
 
-        trackInput(scene, car, sand, carCanvas);
+        establishInput(scene, car, sand, carCanvas);
+
+        CarAIController carAIController = new CarAIController();
 
         HBox buttonPanel = new HBox();
         buttonPanel.setStyle("-fx-background-color: #336699;");
         buttonPanel.setPrefHeight(this.buttonPanelHeight);
         buttonPanel.setPrefWidth(this.gameWidth);
         Button btnPlay = new Button("Play");
+        btnPlay.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                play(carAIController, car, carCanvas);
+            }
+        });
         btnPlay.setFocusTraversable(false);
         buttonPanel.getChildren().add(btnPlay);
         flow.getChildren().add(buttonPanel);
 
+
+
         stage.show();
     }
 
-    private void trackInput(Scene scene, Car car, Sand sand, Canvas canvas)
+    private void play(CarAIController carAIController, Car car, Canvas canvas)
+    {
+        final long startNanoTime = System.nanoTime();
+
+        new AnimationTimer()
+        {
+            public void handle(long currentNanoTime)
+            {
+                CarAction action = carAIController.getNextAction();
+                if (action == CarAction.ROTATE_RIGHT) {
+                    car.rotateRight();
+                }
+                else if (action == CarAction.ROTATE_LEFT) {
+                    car.rotateLeft();
+                }
+                else if (action == CarAction.MOVE_FORWARD) {
+                    car.moveForward();
+                }
+                car.draw(canvas);
+            }
+        }.start();
+    }
+
+    private void pause()
+    {
+
+    }
+
+    private void establishInput(Scene scene, Car car, Sand sand, Canvas canvas)
     {
         scene.setOnKeyPressed(
             new EventHandler<KeyEvent>()
