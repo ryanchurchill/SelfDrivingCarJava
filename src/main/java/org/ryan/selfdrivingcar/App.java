@@ -51,8 +51,8 @@ public class App extends Application {
 
         Canvas carCanvas = new Canvas(this.gameWidth, this.gameHeight);
         gamePane.getChildren().add(carCanvas);
-        Car car = new Car(50, 50);
-        car.draw(carCanvas);
+        Car car = new Car(50, 50, carCanvas);
+        car.draw();
 
         Canvas sandCanvas = new Canvas(this.gameWidth, this.gameHeight);
         gamePane.getChildren().add(sandCanvas);
@@ -105,7 +105,7 @@ public class App extends Application {
                 else if (action == CarAction.MOVE_FORWARD) {
                     car.moveForward();
                 }
-                car.draw(canvas);
+                car.draw();
             }
         }.start();
     }
@@ -125,15 +125,15 @@ public class App extends Application {
                     String code = e.getCode().toString();
                     if (code == "RIGHT") {
                         car.rotateRight();
-                        car.draw(canvas);
+                        car.draw();
                     }
                     else if (code == "LEFT") {
                         car.rotateLeft();
-                        car.draw(canvas);
+                        car.draw();
                     }
                     else if (code == "UP") {
                         car.moveForward();
-                        car.draw(canvas);
+                        car.draw();
                     }
                 }
             }

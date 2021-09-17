@@ -22,6 +22,9 @@ public class Car {
     // angle between y-axis and front of car
     private double angleDeg = 0;
 
+    private Canvas canvas;
+    private GraphicsContext gc;
+
     private final double carWidth = 25;
     private final double carHeight = 10;
     private double rotationIncrementDeg = 15;
@@ -36,14 +39,16 @@ public class Car {
     private Circle sensorRight;
     private Circle sensorLeft;
 
-    public Car(double positionX, double positionY)
+    public Car(double positionX, double positionY, Canvas canvas)
     {
         this.positionX = positionX;
         this.positionY = positionY;
+        this.canvas = canvas;
+        this.gc = canvas.getGraphicsContext2D();
         initialize();
     }
 
-    private void fillOval(GraphicsContext gc, Circle circle)
+    private void fillOval(Circle circle)
     {
         gc.fillOval(circle.getCenterX() - circle.getRadius(), circle.getCenterY() - circle.getRadius(), circle.getRadius()*2, circle.getRadius()*2);
     }
@@ -62,7 +67,7 @@ public class Car {
         return ret;
     }
 
-    public void draw(Canvas canvas)
+    public void draw()
     {
         GraphicsContext gc = canvas.getGraphicsContext2D();
 
@@ -70,18 +75,18 @@ public class Car {
         gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
 
         // draw car
-        drawCar(canvas);
+        drawCar();
 
         // draw sensor2
         gc.setFill(Color.RED);
-        fillOval(gc, sensorMiddle);
+        fillOval(sensorMiddle);
         gc.setFill(Color.YELLOW);
-        fillOval(gc, sensorRight);
+        fillOval(sensorRight);
         gc.setFill(Color.BLUE);
-        fillOval(gc, sensorLeft);
+        fillOval(sensorLeft);
     }
 
-    private void drawCar(Canvas canvas)
+    private void drawCar()
     {
         GraphicsContext gc = canvas.getGraphicsContext2D();
         gc.setFill(Color.WHITE);
@@ -191,9 +196,16 @@ public class Car {
         // rotate
         movementVector = rotateVectorClockwise(movementVector, angleDeg);
 
+        // calculate position
+        double newPosX = positionX + movementVector.getX();
+        double newPosY = positionY + movementVector.getY();
+
+
         // update properties
-        positionX += movementVector.getX();
-        positionY += movementVector.getY();
-        updateSensorCoordinates();
+        if (newPosX >= 0 && newPosX < canvas.getWidth() && newPosY >= 0 && newPosY < canvas.getHeight()) {
+            positionX = newPosX;
+            positionY = newPosY;
+            updateSensorCoordinates();
+        }
     }
 }
