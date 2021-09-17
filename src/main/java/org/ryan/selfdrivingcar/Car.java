@@ -183,6 +183,8 @@ public class Car {
 
     public void moveForward()
     {
+        // TODO (maybe): prevent going off screen
+
         // straight left movement vector, assuming angle of 0
         Point2D movementVector = new Point2D(-movementIncrement, 0);
 
