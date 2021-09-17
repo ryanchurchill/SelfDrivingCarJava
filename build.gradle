@@ -5,9 +5,11 @@ plugins {
 
 repositories {
     mavenCentral()
+    jcenter()
 }
 
 dependencies {
+    implementation "org.pytorch:pytorch_java_only:1.9.0"
 }
 
 javafx {
@@ -15,4 +17,12 @@ javafx {
     modules = [ 'javafx.controls', 'javafx.fxml' ]
 }
 
-mainClassName = 'org.ryan.selfdrivingcar.App'
+def LIBTORCH_HOME = System.getenv('LIBTORCH_HOME')
+if (!LIBTORCH_HOME) {
+    throw new RuntimeException('LIBTORCH_HOME not present in environment.');
+}
+
+application {
+    mainClassName = 'org.ryan.selfdrivingcar.App'
+    applicationDefaultJvmArgs = ["-Djava.library.path=$LIBTORCH_HOME/lib"]
+}
