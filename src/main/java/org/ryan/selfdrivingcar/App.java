@@ -69,6 +69,7 @@ public class App extends Application {
         buttonPanel.setPrefHeight(this.buttonPanelHeight);
         buttonPanel.setPrefWidth(this.gameWidth);
         Button btnPlay = new Button("Play");
+        btnPlay.setFocusTraversable(false);
         buttonPanel.getChildren().add(btnPlay);
         flow.getChildren().add(buttonPanel);
 
