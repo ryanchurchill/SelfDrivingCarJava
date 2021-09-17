@@ -28,12 +28,15 @@ public class Sand {
     {
 //        gc.setFill(Color.YELLOW);
 //        gc.fillOval(centerX - radius, centerY - radius, radius*2, radius*2);
-
+        List<Point2D> pointsInCircle = getPointsInCircle(centerX, centerY, radius);
+        for (Point2D p : pointsInCircle) {
+            addSandPixel((int)p.getX(), (int)p.getY(), gc);
+        }
     }
 
     private List<Point2D> getPointsInCircle(int centerX, int centerY, int radius)
     {
-        ArrayList<Point2D> points = new ArrayList<>();
+        ArrayList<Point2D> ret = new ArrayList<>();
 
         // bounding box
         int minX = centerX - radius;
@@ -41,8 +44,16 @@ public class Sand {
         int minY = centerY - radius;
         int maxY = centerY + radius;
 
-        for ()
+        Point2D center = new Point2D(centerX, centerY);
+        for (int x = minX; x <= maxX; x++) {
+            for (int y = minY; y <= maxY; y++) {
+                if (Math.abs(center.distance(x, y)) <= radius) {
+                    Point2D p = new Point2D(x, y);
+                    ret.add(p);
+                }
+            }
+        }
 
-
+        return ret;
     }
 }

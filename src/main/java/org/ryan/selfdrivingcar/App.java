@@ -44,9 +44,9 @@ public class App extends Application {
         Canvas sandCanvas = new Canvas(800, 600);
         stackPane.getChildren().add(sandCanvas);
         Sand sand = new Sand(this.width, this.height);
-        sand.addSandCircle(500, 500, 50, sandCanvas.getGraphicsContext2D());
+        sand.addSandCircle(300, 300, 5, sandCanvas.getGraphicsContext2D());
 
-//        Circle tiny = new Circle(50, 50, 2);
+//        Circle tiny = new Circle(500, 500, 10);
 //        tiny.setFill(Color.RED);
 //        root.getChildren().add(tiny);
 
