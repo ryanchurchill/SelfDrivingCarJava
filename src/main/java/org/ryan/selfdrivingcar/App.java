@@ -13,6 +13,9 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import org.ryan.selfdrivingcar.ai.CarAI;
+import org.ryan.selfdrivingcar.ai.CarAILoop;
+import org.ryan.selfdrivingcar.ai.RandomCarAI;
 
 /**
  *                      Stage
@@ -57,62 +60,51 @@ public class App extends Application {
         Canvas sandCanvas = new Canvas(this.gameWidth, this.gameHeight);
         gamePane.getChildren().add(sandCanvas);
         Sand sand = new Sand(sandCanvas);
-//        sand.addSandCircle(300, 300, 5, sandCanvas.getGraphicsContext2D());
 
 //        Circle tiny = new Circle(500, 500, 10);
 //        tiny.setFill(Color.RED);
 //        root.getChildren().add(tiny);
 
+        /*
+        INPUT AND AI
+         */
+
         establishInput(scene, car, sand, carCanvas);
 
-        CarAIController carAIController = new CarAIController();
+        CarAI carAI = new RandomCarAI();
+        CarAILoop carAILoop = new CarAILoop(carAI, car);
 
+
+        /*
+        BUTTON PANEL
+         */
         HBox buttonPanel = new HBox();
         buttonPanel.setStyle("-fx-background-color: #336699;");
         buttonPanel.setPrefHeight(this.buttonPanelHeight);
         buttonPanel.setPrefWidth(this.gameWidth);
+        flow.getChildren().add(buttonPanel);
+
         Button btnPlay = new Button("Play");
         btnPlay.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                play(carAIController, car, carCanvas);
+                carAILoop.start();
             }
         });
         btnPlay.setFocusTraversable(false);
         buttonPanel.getChildren().add(btnPlay);
-        flow.getChildren().add(buttonPanel);
 
-
+        Button btnPause = new Button("Pause");
+        btnPause.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                carAILoop.stop();
+            }
+        });
+        btnPause.setFocusTraversable(false);
+        buttonPanel.getChildren().add(btnPause);
 
         stage.show();
-    }
-
-    private void play(CarAIController carAIController, Car car, Canvas canvas)
-    {
-        final long startNanoTime = System.nanoTime();
-
-        new AnimationTimer()
-        {
-            public void handle(long currentNanoTime)
-            {
-                CarAction action = carAIController.getNextAction();
-                if (action == CarAction.ROTATE_RIGHT) {
-                    car.rotateRight();
-                }
-                else if (action == CarAction.ROTATE_LEFT) {
-                    car.rotateLeft();
-                }
-                else if (action == CarAction.MOVE_FORWARD) {
-                    car.moveForward();
-                }
-                car.draw();
-            }
-        }.start();
-    }
-
-    private void pause()
-    {
-
     }
 
     private void establishInput(Scene scene, Car car, Sand sand, Canvas canvas)
