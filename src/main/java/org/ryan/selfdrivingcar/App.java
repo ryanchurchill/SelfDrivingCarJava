@@ -1,6 +1,5 @@
 package org.ryan.selfdrivingcar;
 
-import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -16,7 +15,6 @@ import javafx.stage.Stage;
 import org.ryan.selfdrivingcar.ai.CarAI;
 import org.ryan.selfdrivingcar.ai.CarAILoop;
 import org.ryan.selfdrivingcar.ai.RandomCarAI;
-import org.ryan.selfdrivingcar.ai.brain.Network;
 
 /**
  *                      Stage
@@ -35,8 +33,6 @@ public class App extends Application {
     private final int buttonPanelHeight = 100;
 
     public void start(Stage stage) {
-        Network n = new Network(3, 3);
-
         stage.setTitle("Self driving car");
 
         Group root = new Group();

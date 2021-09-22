@@ -5,11 +5,11 @@ plugins {
 
 repositories {
     mavenCentral()
-    jcenter()
 }
 
 dependencies {
-    implementation "org.pytorch:pytorch_java_only:1.9.0"
+    implementation "org.nd4j:nd4j-native-platform:1.0.0-M1.1"
+    implementation "org.deeplearning4j:deeplearning4j-core:1.0.0-M1.1"
 }
 
 javafx {
@@ -17,12 +17,6 @@ javafx {
     modules = [ 'javafx.controls', 'javafx.fxml' ]
 }
 
-def LIBTORCH_HOME = System.getenv('LIBTORCH_HOME')
-if (!LIBTORCH_HOME) {
-    throw new RuntimeException('LIBTORCH_HOME not present in environment.');
-}
-
 application {
-    mainClassName = 'org.ryan.selfdrivingcar.App'
-    applicationDefaultJvmArgs = ["-Djava.library.path=$LIBTORCH_HOME/lib"]
+    mainClassName = 'org.ryan.dl4jtutorial.App'
 }
